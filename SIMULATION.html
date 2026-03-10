@@ -1,0 +1,162 @@
+# SIMULATION 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PESU DDCO ATM Emulator</title>
+    <style>
+        :root { --glow: #00ff41; --panel: #1a1a1a; }
+        body { background: #0d0208; color: white; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .atm-frame { background: #2c2c2c; padding: 30px; border-radius: 10px; border: 5px solid #444; width: 480px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .screen { background: #001100; border: 8px solid #111; height: 260px; padding: 20px; color: var(--glow); position: relative; border-radius: 5px; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        button { background: #333; color: white; border: 2px solid #555; padding: 15px; font-size: 1.1rem; cursor: pointer; border-radius: 5px; }
+        .btn-enter { background: #1b5e20; } .btn-clear { background: #b71c1c; }
+        .logic-panel { margin-top: 20px; width: 480px; font-size: 0.8rem; background: #222; padding: 10px; border-left: 4px solid var(--glow); }
+        .led { width: 12px; height: 12px; border-radius: 50%; background: #000; display: inline-block; border: 1px solid #444; margin-right: 5px;}
+        .led.on { background: #f44336; box-shadow: 0 0 8px #f44336; }
+    </style>
+</head>
+<body>
+
+    <h2 style="color: var(--glow);">PESU DDCO: ATM HARDWARE EMULATOR</h2>
+
+    <div class="atm-frame">
+        <div class="screen">
+            <div id="reg" style="font-size: 0.7rem; opacity: 0.6; text-align: right;">STATE: S_HOME</div>
+            <div id="display-content" style="text-align: center; margin-top: 30px;">
+                <h3>SYSTEM READY</h3>
+                <p>INSERT CARD TO BEGIN</p>
+            </div>
+            <div id="input-buffer" style="font-size: 1.5rem; text-align: center; margin-top: 20px; color: #fff;"></div>
+        </div>
+
+        <div class="keypad">
+            <button onclick="press(1)">1</button><button onclick="press(2)">2</button><button onclick="press(3)">3</button>
+            <button onclick="press(4)">4</button><button onclick="press(5)">5</button><button onclick="press(6)">6</button>
+            <button onclick="press(7)">7</button><button onclick="press(8)">8</button><button onclick="press(9)">9</button>
+            <button class="btn-clear" onclick="clearInput()">CLR</button><button onclick="press(0)">0</button>
+            <button class="btn-enter" onclick="processEnter()">ENT</button>
+        </div>
+        
+        <button style="width:100%; margin-top:10px; padding:10px;" onclick="insertCard()">[ SIMULATE CARD INSERT ]</button>
+        <button style="width:100%; margin-top:5px; padding:10px; background:#555;" onclick="resetSys()">RST (RESET SYSTEM)</button>
+    </div>
+
+    <div class="logic-panel">
+        <div><div id="lock-led" class="led"></div> LOCKED_OUT | <div id="err-led" class="led"></div> AUTH_ERR</div>
+        <div id="logic-log" style="margin-top:10px; color: #888;">LOG: Waiting for clk...</div>
+        <div style="margin-top:5px; color:var(--glow)">Register: account_balance = <span id="bal-reg">$250</span></div>
+    </div>
+
+<script>
+    let state = "S_HOME";
+    let buffer = "";
+    let failedAttempts = 0;
+    let balance = 250;
+    const MAX_WITHDRAW = 100;
+
+    function updateUI(msg = "", sub = "") {
+        document.getElementById("reg").innerText = "STATE: " + state;
+        document.getElementById("input-buffer").innerText = buffer;
+        if(msg) document.getElementById("display-content").innerHTML = `<h3>${msg}</h3><p>${sub}</p>`;
+        document.getElementById("bal-reg").innerText = `$${balance}`;
+        
+        // LEDs
+        document.getElementById("lock-led").className = (state === "S_LOCKED") ? "led on" : "led";
+        document.getElementById("err-led").className = (state === "S_ERROR") ? "led on" : "led";
+    }
+
+    function press(num) {
+        if(["S_HOME", "S_LOCKED", "S_EJECT"].includes(state)) return;
+        // Limit buffer based on state
+        if(state === "S_CARD_READ" || state === "S_PIN_ENTRY") {
+            if(buffer.length < 4) buffer += num;
+        } else {
+            buffer += num; // Amounts can be longer
+        }
+        updateUI();
+    }
+
+    function clearInput() { buffer = ""; updateUI(); }
+
+    function insertCard() {
+        if(state !== "S_HOME") return;
+        state = "S_CARD_READ";
+        updateUI("CARD DETECTED", "Enter 4-digit Account Code");
+        log("S_HOME -> S_CARD_READ");
+    }
+
+    function processEnter() {
+        if(buffer === "" && state !== "S_MENU") return;
+
+        if(state === "S_CARD_READ") {
+            state = "S_PIN_ENTRY";
+            buffer = "";
+            updateUI("ACCOUNT VERIFIED", "Enter 4-digit PIN");
+            log("S_CARD_READ -> S_PIN_ENTRY");
+        } 
+        else if(state === "S_PIN_ENTRY") {
+            if(buffer === "1234") {
+                state = "S_MENU";
+                buffer = "";
+                updateUI("AUTH SUCCESS", "1: Balance | 2: Withdraw");
+                log("S_PIN_ENTRY -> S_MENU");
+            } else {
+                failedAttempts++;
+                log(`Auth Failure ${failedAttempts}/3`);
+                if(failedAttempts >= 3) {
+                    state = "S_LOCKED";
+                    updateUI("SYSTEM LOCKED", "Security Protocol Active");
+                } else {
+                    buffer = "";
+                    updateUI("WRONG PIN", `Try Again (${3-failedAttempts} left)`);
+                }
+            }
+        }
+        else if(state === "S_MENU") {
+            if(buffer === "1") {
+                state = "S_BALANCE";
+                updateUI("ACCOUNT BALANCE", `Your balance is $${balance}.<br>Press ENT to return.`);
+                buffer = " "; // Dummy buffer to allow ENT
+            } else if(buffer === "2") {
+                state = "S_WITHDRAW";
+                buffer = "";
+                updateUI("WITHDRAWAL", "Enter Amount (Max $100)");
+            }
+        }
+        else if(state === "S_BALANCE") {
+            state = "S_MENU"; buffer = "";
+            updateUI("MAIN MENU", "1: Balance | 2: Withdraw");
+        }
+        else if(state === "S_WITHDRAW") {
+            let amt = parseInt(buffer);
+            if(amt > MAX_WITHDRAW || amt > balance) {
+                state = "S_ERROR";
+                updateUI("TRANSACTION FAILED", amt > MAX_WITHDRAW ? "Limit Exceeded ($100)" : "Insufficient Funds");
+                setTimeout(() => { state="S_MENU"; buffer=""; updateUI("MAIN MENU", "1: Balance | 2: Withdraw"); }, 2000);
+            } else {
+                balance -= amt;
+                state = "S_DISPENSE";
+                updateUI("DISPENSING...", `$${amt} dispensed.`);
+                setTimeout(() => { state="S_TX_END"; updateUI("SUCCESS", "Take your cash. ENT to finish."); }, 2000);
+            }
+        }
+        else if(state === "S_TX_END") {
+            state = "S_EJECT";
+            updateUI("THANK YOU", "Card Ejected.");
+            setTimeout(resetSys, 2000);
+        }
+    }
+
+    function resetSys() {
+        state = "S_HOME"; buffer = ""; failedAttempts = 0;
+        updateUI("SYSTEM READY", "INSERT CARD TO BEGIN");
+        log("System Reset (RST)");
+    }
+
+    function log(m) { document.getElementById("logic-log").innerText = "LOG: " + m; }
+</script>
+</body>
+</html>
