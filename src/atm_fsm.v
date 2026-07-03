@@ -88,7 +88,7 @@ always @(posedge clk or posedge rst) begin
     end
 end
 
-// --- 2. Next State Logic (Sequential Logic) (MEALEY MODEL : THE NEXT STATE IS DECIDEC BASE ON CURRENT STATE AND INPUT)---
+// --- 2. Next State Logic (Sequential Logic) (MEALEY MODEL : THE NEXT STATE IS DECIDEC BASED ON CURRENT STATE AND INPUT)---
 always @(*) begin
     next_state = current_state; // Default: self-loop
 
@@ -180,7 +180,7 @@ always @(*) begin
 end
 
 initial begin
-    $dumpfile("atm_waves.vcd");
+    $dumpfile("sim/atm_waves.vcd");
     $dumpvars(0, atm_fsm);
 end
 

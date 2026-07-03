@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.572" timestamp="2026-07-03T16:17:55.073276+00:00" hostname="codespaces-7ed400"><testcase classname="tests.test_atm_cocotb" name="test_atm_fsm" time="1.223"><failure message="SystemExit: FAILED 3 tests.">def test_atm_fsm():
+        this_dir = os.path.dirname(__file__)
+        verilog_sources = [
+            os.path.join(this_dir, os.pardir, "atm_fsm.v")
+        ]
+    
+&gt;       run(
+            verilog_sources=verilog_sources,
+            toplevel="atm_fsm",
+            module="cocotb_tests.test_atm",
+            sim_build="sim_build_cocotb",
+        )
+E       SystemExit: FAILED 3 tests.
+
+tests/test_atm_cocotb.py:11: SystemExit</failure></testcase></testsuite></testsuites>
