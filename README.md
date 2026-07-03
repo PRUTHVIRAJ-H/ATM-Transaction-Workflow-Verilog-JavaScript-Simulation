@@ -34,3 +34,12 @@ A comprehensive hardware-level simulation of an Automated Teller Machine (ATM) u
 - *Security Lockout*: Real-time tracking of failed attempts with a permanent S_LOCKED state after 3 failures.
 - *Hardware-Level Constraints*: Validates balance registers and withdrawal increments (multiples of 10).
 - *Hybrid Simulation*: Verilog logic verified via GTKWave testbenches alongside an interactive HTML/CSS/JS functional simulator.
+
+## SIMPLY 
+ [ THE TESTBENCH ROBOT ]                        [ YOUR ATM CHIP (DUT) ]
+  
+  reg clk ---------(Pushes electricity)---------> input wire clk
+  reg pin_in ------(Pushes electricity)---------> input wire pin_in
+  
+  wire balance_out <---(Passively listens)------- output reg balance_out
+  wire locked_out  <---(Passively listens)------- output reg locked_out
