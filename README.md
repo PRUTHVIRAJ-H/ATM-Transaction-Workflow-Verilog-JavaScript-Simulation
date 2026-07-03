@@ -1,6 +1,29 @@
 
 ATM Transaction Workflow — Verilog Simulation
 
+## 🚀 Quick Start — One Command!
+
+```bash
+make start
+```
+
+That's it! The script will:
+- ✅ Install dependencies
+- ✅ Start Flask backend (port 5000)
+- ✅ Start frontend server (port 8000)
+
+**Open browser:** http://127.0.0.1:8000
+
+**Demo Credentials:**
+- Account: `1234`
+- PIN: `9`
+
+Press `Ctrl+C` to stop.
+
+---
+
+## Project Structure
+
 Purpose
 - Small, interview-friendly RTL project that demonstrates implementing an
   FSM in Verilog, a deterministic Verilog testbench, and a state-aware cocotb
@@ -15,21 +38,24 @@ Why this repo is useful in interviews
   scenarios and quick demos.
 - A cocotb fuzzer (`test_atm_fuzzer.py`) showing modern verification with
   Python for more advanced test automation (optional to run).
-
-Quick start (native simulation)
+- An **interactive HTML/JS+Python backend** that drives the Verilog DUT in real-time so users feel they are using an ATM while actually exercising the design.
 
 Quick-start
 -----------
 
-- Run the native simulation (recommended for interviews):
+1. Run the native simulation (recommended for interviews):
 
-    make native
+```bash
+make native
+```
 
-  or:
+or:
 
-    ./sim/run_native.sh
+```bash
+./sim/run_native.sh
+```
 
-  The waveform is written to `sim/atm_waves.vcd`.
+The waveform is written to `sim/atm_waves.vcd`.
 
 2. Run the simulation:
 
@@ -59,14 +85,13 @@ Next steps for interview polish
 Project files (kept minimal)
 - `atm_fsm.v` — RTL FSM (core)
 - `atm_tb.v` — native Verilog testbench (deterministic scenarios)
+- `app.py` — Flask backend that runs simulations on user actions
+- `atm_app.js` — Frontend ATM UI that calls the backend
+- `index.html` — Interactive ATM webpage interface
 - `test_atm_fuzzer.py` — optional cocotb fuzz test for advanced verification
-- `Makefile` — `make test`, `make clean`, `make native`
+- `Makefile` — `make test`, `make native`, `make backend`, `make serve`, etc.
 - `.github/workflows/ci.yml` — CI runs `make test` and uploads waveform
 
-If you'd like, I can now:
-- convert one scenario to a cocotb unit test with assertions (recommended),
-- or further reduce the repo to a single-file demonstration with a README
-  walkthrough for a whiteboard session.
 ```mermaid
 stateDiagram-v2
     [*] --> S_IDLE

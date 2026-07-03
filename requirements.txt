@@ -1,2 +1,2 @@
-cocotb>=2.6.0
-# Note: cocotb may require build-time dependencies and simulator VPI bindings.
+flask==3.0.0
+flask-cors==4.0.0
