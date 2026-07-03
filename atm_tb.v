@@ -1,4 +1,4 @@
-THIS WAS INIITIALLY AS PART OF MY COLLEGE PROJECT
+// THIS WAS INITIALLY AS PART OF MY COLLEGE PROJECT
 `timescale 1ns / 1ps
 
 module atm_fsm_tb;
@@ -20,6 +20,8 @@ module atm_fsm_tb;
     
      // --- Intermediate Signal for Monitor Fix ---
      reg [8*16:1] current_state_name;
+    integer i;
+    reg seen_error;
     
      // --- Constants ---
      parameter CLK_PERIOD = 10;
@@ -127,6 +129,13 @@ module atm_fsm_tb;
          # (CLK_PERIOD * 3) balance_flag = 1'b0; 
          # (CLK_PERIOD * 3);
 
+        // Check expected balance after $50 withdrawal (250 -> 200)
+        if (balance_out == 8'd200) begin
+            $display("[TEST 2] PASS: balance == 200");
+        end else begin
+            $display("[TEST 2] FAIL: balance == %0d (expected 200)", balance_out);
+        end
+
 
          $display("\n--- SCENARIO 3: SUCCESSFUL WITHDRAWAL ($100). Balance: 200 -> 100 ---");
 
@@ -144,6 +153,13 @@ module atm_fsm_tb;
          // 3.3 End Transaction
          # (CLK_PERIOD * 3) balance_flag = 1'b0; 
          # (CLK_PERIOD * 3);
+
+        // Check expected balance after $100 withdrawal (200 -> 100)
+        if (balance_out == 8'd100) begin
+            $display("[TEST 3] PASS: balance == 100");
+        end else begin
+            $display("[TEST 3] FAIL: balance == %0d (expected 100)", balance_out);
+        end
 
 
          $display("\n--- SCENARIO 4: SUCCESSFUL WITHDRAWAL ($100). Balance: 100 -> 0 ---");
@@ -163,6 +179,13 @@ module atm_fsm_tb;
          # (CLK_PERIOD * 3) balance_flag = 1'b0; 
          # (CLK_PERIOD * 3);
 
+        // Check expected balance after $100 withdrawal (100 -> 0)
+        if (balance_out == 8'd0) begin
+            $display("[TEST 4] PASS: balance == 0");
+        end else begin
+            $display("[TEST 4] FAIL: balance == %0d (expected 0)", balance_out);
+        end
+
 
          $display("\n--- SCENARIO 5: FAILURE: INSUFFICIENT FUNDS (Attempt to withdraw $50 from 0) ---");
 
@@ -177,11 +200,24 @@ module atm_fsm_tb;
 
          // 5.3 Enter Amount $50 (Should trigger ERROR state due to insufficient funds)
          # (CLK_PERIOD * 3) amount_in = 8'd50; 
-         # (CLK_PERIOD * 2) amount_in = 8'd0;
 
-         // 5.4 End Transaction (Eject Card after Error)
-         # (CLK_PERIOD * 3) balance_flag = 1'b0; 
-         # (CLK_PERIOD * 3);
+        // Sample `auth_error` for a larger window to catch transient assertions
+        seen_error = 1'b0;
+        for (i = 0; i < 20; i = i + 1) begin
+            # (CLK_PERIOD);
+            if (auth_error == 1'b1) seen_error = 1'b1;
+        end
+        if (seen_error == 1'b1) begin
+            $display("[TEST 5] PASS: insufficient funds detected (auth_error observed)");
+        end else begin
+            $display("[TEST 5] FAIL: insufficient funds NOT detected (auth_error never asserted)");
+        end
+
+        # (CLK_PERIOD * 2) amount_in = 8'd0;
+
+        // 5.4 End Transaction (Eject Card after Error)
+        # (CLK_PERIOD * 3) balance_flag = 1'b0; 
+        # (CLK_PERIOD * 3);
 
 
          $display("\n--- SCENARIO 6: SECURITY LOCKOUT TEST (3 Failed PIN Attempts) ---");
@@ -213,6 +249,13 @@ module atm_fsm_tb;
          # (CLK_PERIOD * 2) acc_in = 16'd0; 
 
          # (CLK_PERIOD * 5); 
+
+        // Check lockout was triggered
+        if (locked_out == 1'b1) begin
+            $display("[TEST 6] PASS: account locked after 3 failed PIN attempts");
+        end else begin
+            $display("[TEST 6] FAIL: account NOT locked after 3 failed PIN attempts");
+        end
 
          $finish;
     end

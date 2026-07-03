@@ -179,6 +179,11 @@ always @(*) begin
     endcase
 end
 
+initial begin
+    $dumpfile("atm_waves.vcd");
+    $dumpvars(0, atm_fsm);
+end
+
 // --- 3. Output Logic (Sequential Logic - Mealy/Moore) ---
 // Assigns outputs based on current_state and/or inputs
 
