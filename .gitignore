@@ -1,0 +1,11 @@
+# Build and simulation artifacts
+/sim_build/
+sim_native
+*.vvp
+*.vcd
+*.fst
+atm_waves.vcd
+
+# Python caches
+__pycache__/
+*.pyc
