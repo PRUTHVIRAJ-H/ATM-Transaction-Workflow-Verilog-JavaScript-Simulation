@@ -1,98 +1,102 @@
-# ATM Verification Framework for Secure Transaction Processing
+<div align="center">
 
-[![Verilog](https://img.shields.io/badge/RTL-Verilog-blue)]()
-[![Python](https://img.shields.io/badge/Verification-Python-green)]()
-[![Tests](https://img.shields.io/badge/Tests-10%20Passing-brightgreen)]()
-[![Coverage](https://img.shields.io/badge/Coverage-State%20%26%20Transition-orange)]()
+# 🏧 ATM Verification Framework
+### Coverage-Driven Verification of a Secure ATM Finite State Machine
 
-A hardware verification project that models secure ATM transactions using a **Finite State Machine (FSM)** in Verilog and validates its correctness through an automated **Python-based verification framework** featuring randomized testing, coverage analysis, and interactive reporting.
+<p>
+<img src="https://img.shields.io/badge/RTL-Verilog-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Verification-Python-green?style=for-the-badge">
+<img src="https://img.shields.io/badge/Simulator-Icarus_Verilog-orange?style=for-the-badge">
+<img src="https://img.shields.io/badge/Waveforms-GTKWave-purple?style=for-the-badge">
+<img src="https://img.shields.io/badge/Tests-10_Passing-brightgreen?style=for-the-badge">
+<img src="https://img.shields.io/badge/Coverage-State_&_Transition-success?style=for-the-badge">
+</p>
+
+**A hardware verification framework that models secure ATM transactions using Verilog and validates correctness through automated Python-based testing, coverage analysis, and interactive reporting.**
+
+</div>
 
 ---
 
-## Architecture Overview
 
-```text
-                    +----------------+
-                    |   Python API   |
-                    +--------+-------+
-                             |
-                             v
-                    +----------------+
-                    | Testbench Gen   |
-                    +--------+-------+
-                             |
-                             v
-                    +----------------+
-                    |  ATM FSM (RTL) |
-                    |    Verilog     |
-                    +--------+-------+
-                             |
-                             v
-                    +----------------+
-                    |  Icarus Verilog|
-                    |   Simulation   |
-                    +--------+-------+
-                             |
-           +----------------+----------------+
-           |                                 |
-           v                                 v
-+------------------+             +------------------+
-| Coverage Reports |             | HTML Dashboard   |
-+------------------+             +------------------+
+---
+
+# 🏗️ Verification Architecture
+
+```mermaid
+flowchart TD
+
+A[Python Test Suite]
+--> B[Testbench Generator]
+
+B --> C[ATM FSM RTL]
+
+C --> D[Icarus Verilog Simulation]
+
+D --> E[Coverage Engine]
+D --> F[Waveform Generation]
+
+E --> G[HTML Dashboard]
+F --> H[GTKWave]
 ```
 
 ---
 
-# Features
+# 🔄 Verification Flow
 
-- ✅ 12-state ATM Finite State Machine in Verilog
-- ✅ Card authentication and PIN verification
-- ✅ Three-attempt account lockout mechanism
-- ✅ Withdrawal limit and insufficient balance detection
-- ✅ Automated Verilog testbench generation
-- ✅ Randomized and edge-case verification
-- ✅ State and transition coverage collection
-- ✅ Interactive HTML dashboard
-- ✅ GTKWave waveform debugging
-- ✅ One-command regression execution
+```mermaid
+sequenceDiagram
+    participant T as Python Tests
+    participant TB as Testbench
+    participant RTL as ATM FSM
+    participant SIM as Simulator
+    participant REP as Reports
+
+    T->>TB: Generate Scenario
+    TB->>RTL: Apply Inputs
+    RTL->>SIM: Execute FSM
+    SIM->>REP: Coverage Metrics
+    SIM->>REP: Dashboard
+    SIM->>REP: Waveforms
+```
 
 ---
 
-# FSM Architecture
+# 🏧 ATM Finite State Machine
 
 <p align="center">
-  <img src="reports/fsm.png" width="900">
+  <img src="reports/fsm.png" width="950">
 </p>
 
 ---
 
-# Verification Dashboard
+# ✨ Features
 
-<p align="center">
-  <img src="reports/dashboard.png" width="900">
-</p>
+| Feature | Description |
+|---------|-------------|
+| 🔐 Authentication | Card validation and PIN verification |
+| 🚫 Security | 3-attempt account lockout |
+| 💰 Transactions | Balance enquiry and cash withdrawal |
+| ⚠️ Error Handling | Insufficient balance and invalid withdrawal detection |
+| 🧪 Verification | Automated unit and randomized testing |
+| 📈 Coverage | State and transition coverage collection |
+| 📊 Reporting | Interactive HTML dashboard |
+| 🌊 Debugging | GTKWave waveform analysis |
+| ⚡ Automation | One-command regression execution |
 
 ---
 
-# Waveform Analysis
-
-<p align="center">
-  <img src="reports/waveform.png" width="900">
-</p>
-
----
-
-# Project Structure
+# 📁 Repository Structure
 
 ```text
 ATM-Verification-Framework
 │
 ├── src/
-│   └── atm_fsm.v                 # RTL Design
+│   └── atm_fsm.v                # RTL Design
 │
 ├── sim/
-│   ├── atm_server.py            # Python simulation engine
-│   └── run_native.py
+│   ├── atm_server.py            # Simulation Engine
+│   └── run_native.py            # Native Simulator
 │
 ├── tests/
 │   ├── test_atm_server.py
@@ -103,58 +107,21 @@ ATM-Verification-Framework
 │
 ├── scripts/
 │   ├── generate_coverage.py
-│   ├── generate_dashboard.py
-│   └── clean.py
+│   └── generate_dashboard.py
 │
 ├── reports/
 │   ├── dashboard.html
 │   ├── dashboard.png
-│   ├── fsm.png
-│   ├── waveform.png
 │   ├── coverage.txt
-│   └── summary.json
+│   ├── fsm.png
+│   └── waveform.png
 │
-├── run_demo.py
-├── requirements.txt
-└── README.md
+└── run_demo.py
 ```
 
 ---
 
-# Technology Stack
-
-| Category | Tools |
-|----------|--------|
-| RTL Design | Verilog |
-| Simulation | Icarus Verilog |
-| Waveform Analysis | GTKWave |
-| Verification | Python, unittest |
-| Reporting | HTML, CSS, JavaScript |
-| Coverage | Custom State & Transition Coverage Engine |
-
----
-
-# Getting Started
-
-## Clone Repository
-
-```bash
-git clone https://github.com/<username>/ATM-Verification-Framework.git
-cd ATM-Verification-Framework
-```
-
----
-
-## Install Requirements
-
-```bash
-pip install -r requirements.txt
-sudo apt install iverilog gtkwave
-```
-
----
-
-# Run Complete Verification Flow
+# 🚀 Run the Entire Verification Flow
 
 ```bash
 python run_demo.py
@@ -162,97 +129,141 @@ python run_demo.py
 
 This command automatically:
 
-- Runs all unit tests
-- Executes randomized scenarios
-- Generates coverage reports
-- Builds the verification dashboard
+✅ Executes all tests
+
+✅ Generates coverage reports
+
+✅ Creates the HTML dashboard
+
+✅ Produces simulation waveforms
 
 ---
 
-# Run Individual Components
+# 🧪 Run Individual Components
 
-### Unit Tests
+### Run Unit Tests
 
 ```bash
 python -m unittest discover tests -v
 ```
 
-### Coverage Report
+### Generate Coverage Report
 
 ```bash
 python -m scripts.generate_coverage
 ```
 
-### Single Simulation
-
-```bash
-python -m sim.run_native
-```
-
-### Dashboard Generation
+### Generate Dashboard
 
 ```bash
 python -m scripts.generate_dashboard
 ```
 
----
+### Run a Native Simulation
 
-# Sample Output
-
-```text
-ATM FSM Verification Demo
-
-Running unit tests...
-Ran 10 tests in 40.114s
-
-OK
-
-Generating coverage report...
-State Coverage      : 100%
-Transition Coverage : 100%
-
-Generating dashboard...
-Dashboard generated.
-
-Everything completed successfully.
+```bash
+python -m sim.run_native
 ```
 
 ---
 
-# Demo
+# 📋 Sample Output
 
-🎥 **Terminal Execution Recording**
+```text
+Running unit tests...
 
-[▶ Watch Demo](Add-Asciinema-Link-Here)
+Ran 10 tests in 40.114s
 
----
+OK
 
-# Verification Highlights
+State Coverage      : 100%
+Transition Coverage : 100%
 
-✔ State Coverage Collection
-
-✔ Transition Coverage Collection
-
-✔ Randomized Testing
-
-✔ Edge Case Validation
-
-✔ Lockout Security Verification
-
-✔ Withdrawal Constraint Verification
-
-✔ Automated Regression Execution
+Dashboard generated.
+```
 
 ---
 
-# Key Learnings
+# 📈 Verification Metrics
 
-- Finite State Machine design and implementation
-- Hardware verification methodologies
-- Coverage-driven verification
-- Test automation and regression frameworks
-- Waveform debugging and analysis
-- Building software tooling around RTL systems
+```mermaid
+pie
+    title Project Components
+    "RTL Design" : 30
+    "Verification Framework" : 30
+    "Coverage" : 20
+    "Dashboard" : 10
+    "Waveforms" : 10
+```
 
 ---
 
+Generated VCD files can be inspected using GTKWave.
+
+```bash
+gtkwave sim/atm_waves.vcd
+```
+
+---
+
+# 🎬 Live Demo
+
+### Terminal Execution
+
+[▶ Add Asciinema Recording Here](https://asciinema.org)
+
+---
+
+# 🛠️ Technology Stack
+
+<p align="center">
+
+<img src="https://skillicons.dev/icons?i=python,html,css,javascript" />
+
+</p>
+
+- Verilog
+- Python
+- Icarus Verilog
+- GTKWave
+- HTML/CSS
+- JavaScript
+- Python unittest
+
+---
+
+# 📚 Key Learnings
+
+<details>
+<summary><b>Expand</b></summary>
+
+- Finite State Machine Design
+- Hardware Verification Methodologies
+- Coverage-Driven Testing
+- Automated Regression Frameworks
+- Waveform-Based Debugging
+- Building Software Tooling Around RTL Designs
+
+</details>
+
+---
+
+# 🎯 Project Highlights
+
+✅ Designed a secure ATM Finite State Machine in Verilog.
+
+✅ Built an automated Python verification framework around RTL simulation.
+
+✅ Implemented state and transition coverage collection.
+
+✅ Developed an interactive dashboard for simulation reporting.
+
+✅ Automated the complete regression flow using a single command.
+
+---
+
+<div align="center">
+
+### ⭐ If you found this project interesting, consider giving it a star.
+
+</div>
