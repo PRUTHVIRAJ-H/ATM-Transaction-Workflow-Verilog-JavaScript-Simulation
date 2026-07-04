@@ -1,7 +1,135 @@
-• Designed and implemented a Verilog-based ATM finite state machine supporting authentication, withdrawals, lockout protection, and balance enquiry.
+# ATM Verification Framework for Secure Transaction Processing
 
-• Built a Python verification framework that automatically generates testbenches, executes RTL simulations using Icarus Verilog, and parses simulation outputs.
+A hardware verification project that models secure ATM transactions using a Verilog Finite State Machine (FSM) and validates its correctness through an automated Python-based verification framework.
 
-• Developed randomized and edge-case test suites with state and transition coverage reporting, achieving high verification coverage across ATM workflows.
+---
 
-• Created an HTML dashboard for simulation reports, coverage metrics, and waveform inspection.
+## Features
+
+* 12-state Verilog FSM implementation
+* Card authentication and PIN verification
+* 3-attempt account lockout
+* Withdrawal limits and insufficient balance detection
+* Automated testbench generation
+* Randomized and edge-case testing
+* State and transition coverage reporting
+* HTML dashboard and waveform visualization
+* One-command regression execution
+
+---
+
+## FSM Architecture
+
+![FSM Diagram](reports/fsm.png)
+
+---
+
+## Verification Dashboard
+
+![Dashboard](reports/dashboard.png)
+
+---
+
+## Coverage Report
+
+![Coverage](reports/coverage.txt)
+
+---
+
+## Waveform Analysis
+
+![Waveform](reports/waveform.png)
+
+---
+
+## Repository Structure
+
+```text
+src/        → RTL design
+sim/        → Simulation framework
+tests/      → Unit and randomized tests
+scripts/    → Coverage generation
+reports/    → Screenshots and documentation
+```
+
+---
+
+## Technologies Used
+
+* Verilog
+* Python
+* HTML/CSS
+* JavaScript
+* Icarus Verilog
+* GTKWave
+* unittest
+
+---
+
+## Running the Project
+
+Clone the repository:
+
+```bash
+git clone <repo-url>
+cd ATM-Verification-Framework
+```
+
+Run the complete verification flow:
+
+```bash
+python run_demo.py
+```
+
+Run unit tests:
+
+```bash
+python -m unittest discover tests -v
+```
+
+Generate coverage report:
+
+```bash
+python scripts/generate_coverage.py
+```
+
+Run a single simulation:
+
+```bash
+python -m sim.run_native
+```
+
+---
+
+## Sample Output
+
+```text
+Ran 10 tests in 40.114s
+
+OK
+
+Coverage:
+State Coverage      : 100%
+Transition Coverage : 100%
+```
+
+---
+
+## Demo
+
+Terminal Demo:
+
+[Add asciinema link here]
+
+---
+
+## Key Learning Outcomes
+
+* Finite State Machine design in Verilog
+* Hardware verification and testing methodologies
+* Automated simulation and regression testing
+* Coverage-driven verification
+* Debugging using waveform analysis
+* Building software tooling around RTL designs
+
+---
