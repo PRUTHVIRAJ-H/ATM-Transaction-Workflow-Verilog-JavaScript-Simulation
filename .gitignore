@@ -1,11 +1,12 @@
-# Build and simulation artifacts
-/sim_build/
-sim_native
-*.vvp
-*.vcd
-*.fst
-atm_waves.vcd
-
-# Python caches
+```text
 __pycache__/
 *.pyc
+*.vcd
+*.out
+*.html
+*.log
+.pytest_cache/
+.coverage
+dist/
+build/
+```

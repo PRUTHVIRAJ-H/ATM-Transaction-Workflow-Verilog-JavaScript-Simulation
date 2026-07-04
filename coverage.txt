@@ -1,0 +1,29 @@
+Visited States
+================
+
+0 : HOME
+1 : CARD_READ
+2 : PIN_ENTRY
+3 : AUTH_CHECK
+4 : MENU
+5 : BALANCE
+6 : WITHDRAW
+7 : DISPENSE
+8 : TRANSACTION_END
+9 : EJECT_CARD
+
+Transitions
+================
+
+0 -> 1
+1 -> 2
+2 -> 3
+3 -> 4
+3 -> 9
+4 -> 5
+4 -> 6
+5 -> 8
+6 -> 7
+7 -> 8
+8 -> 9
+9 -> 0

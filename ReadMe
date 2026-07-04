@@ -1,0 +1,7 @@
+• Designed and implemented a Verilog-based ATM finite state machine supporting authentication, withdrawals, lockout protection, and balance enquiry.
+
+• Built a Python verification framework that automatically generates testbenches, executes RTL simulations using Icarus Verilog, and parses simulation outputs.
+
+• Developed randomized and edge-case test suites with state and transition coverage reporting, achieving high verification coverage across ATM workflows.
+
+• Created an HTML dashboard for simulation reports, coverage metrics, and waveform inspection.
